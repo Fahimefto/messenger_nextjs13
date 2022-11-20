@@ -1,6 +1,7 @@
 "use client";
 import React, { FormEvent, useState } from "react";
-
+import { v4 as uuid } from "uuid";
+import { Message } from "../typings";
 function InputMessage() {
   const [input, setInput] = useState("");
   const addMessage = (e: FormEvent<HTMLFormElement>) => {
@@ -8,7 +9,29 @@ function InputMessage() {
     if (!input) {
       return;
     }
+    const messageToSend = input;
     setInput("");
+    const id = uuid();
+    const message: Message = {
+      id: id,
+      message: messageToSend,
+      created_at: Date.now(),
+      user_name: "Fahim",
+      profile_pic:
+        "https://res.cloudinary.com/dtcjz5osi/image/upload/v1668951092/messenger/Blue_With_Sparkles_Cleaning_Service_Logo_2_hm0zn0.png",
+      email: "fahimifto@yahoo.com",
+    };
+
+    const uploadMessage = async () => {
+      const res = await fetch("/api/admessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
+      });
+      const data = await res.json();
+    };
   };
   return (
     <form
